@@ -376,6 +376,33 @@ const App = {
 
     return `
       <div class="home-cards">
+        <!-- 体育赛事 -->
+        <div class="home-card" data-module="sports" style="--card-color: #3498db;">
+          <div class="home-card-header">
+            <div class="home-card-icon">⚽</div>
+            <div>
+              <div class="home-card-title">体育赛事</div>
+              <div class="home-card-desc">赛事直播 · 足球计算器 · 每日推送</div>
+            </div>
+          </div>
+          <div class="home-card-stats">
+            <div class="home-stat">
+              <div class="home-stat-label">今日赛事</div>
+              <div class="home-stat-value">${sportsMatches.filter(m => m.date === today || m.status === '进行中').length}场</div>
+            </div>
+            <div class="home-stat">
+              <div class="home-stat-label">今日推送</div>
+              <div class="home-stat-value">${todayPush ? todayPush.picks.length + '场推荐' : '未生成'}</div>
+            </div>
+          </div>
+          <div class="home-card-pages">
+            <span>📅 赛事赛程</span>
+            <span>🧮 足球计算器</span>
+            <span>📢 每日推送</span>
+          </div>
+          <div class="home-card-enter">点击进入 →</div>
+        </div>
+
         <!-- 体彩彩票 -->
         <div class="home-card" data-module="lottery" style="--card-color: #e74c3c;">
           <div class="home-card-header">
@@ -400,33 +427,6 @@ const App = {
             <span>📋 开奖数据</span>
             <span>🔗 链路分析</span>
             <span>📝 每日跟进</span>
-          </div>
-          <div class="home-card-enter">点击进入 →</div>
-        </div>
-
-        <!-- 体育赛事 -->
-        <div class="home-card" data-module="sports" style="--card-color: #3498db;">
-          <div class="home-card-header">
-            <div class="home-card-icon">⚽</div>
-            <div>
-              <div class="home-card-title">体育赛事</div>
-              <div class="home-card-desc">赛事赛程 · 足球计算器 · 每日推送</div>
-            </div>
-          </div>
-          <div class="home-card-stats">
-            <div class="home-stat">
-              <div class="home-stat-label">今日赛事</div>
-              <div class="home-stat-value">${sportsMatches.filter(m => m.date === today || m.status === '进行中').length}场</div>
-            </div>
-            <div class="home-stat">
-              <div class="home-stat-label">今日推送</div>
-              <div class="home-stat-value">${todayPush ? todayPush.picks.length + '场推荐' : '未生成'}</div>
-            </div>
-          </div>
-          <div class="home-card-pages">
-            <span>📅 赛事赛程</span>
-            <span>🧮 足球计算器</span>
-            <span>📢 每日推送</span>
           </div>
           <div class="home-card-enter">点击进入 →</div>
         </div>
@@ -905,6 +905,16 @@ const App = {
       <div class="league-tabs" style="display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap;">
         ${leagues.map(l => `<div class="lottery-tab ${currentLeague===l?'active':''}" data-league="${l}" style="font-size:12px;padding:4px 10px;">${l}</div>`).join('')}
       </div>
+
+      <!-- 📺 直播入口（置顶） -->
+      <div class="card live-top-card" style="margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div class="card-title" style="margin:0;"><span class="icon">📺</span> 免费赛事直播 · 点击即看</div>
+          <span style="font-size:12px;color:var(--accent3);">🟢 全部免费</span>
+        </div>
+        ${this.renderLiveLinks(isFootball)}
+      </div>
+
       <div class="grid grid-2" style="margin-bottom:16px;">
         <div class="card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
@@ -960,38 +970,33 @@ const App = {
         </div>
         <button class="btn btn-primary" id="btn-add-match-bet">✅ 添加竞猜</button>
       </div>
-
-      <!-- 直播入口 -->
-      <div class="card" style="margin-top:16px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-          <div class="card-title" style="margin:0;"><span class="icon">📺</span> 赛事直播入口</div>
-          <span style="font-size:12px;color:var(--text-dim);">点击平台名跳转观看</span>
-        </div>
-        ${this.renderLiveLinks(isFootball)}
-      </div>
     `;
   },
 
   renderLiveLinks(isFootball) {
     const footballLinks = [
-      { name: '央视体育', url: 'https://tv.cctv.com/live/cctv5/', icon: '📺', desc: 'CCTV5 官方直播', tag: '免费' },
-      { name: '央视频', url: 'https://www.yangshipin.cn/tv/home?pid=600001804', icon: '📱', desc: '央视频APP网页版', tag: '免费' },
-      { name: '咪咕视频', url: 'https://www.miguvideo.com/gateway/playurl/v3/play/playurl', icon: '🎬', desc: '中超/英超/西甲直播', tag: '部分免费' },
-      { name: '爱奇艺体育', url: 'https://sports.iqiyi.com/', icon: '🎥', desc: '欧冠/欧联/西甲', tag: '会员' },
-      { name: '腾讯体育', url: 'https://sports.qq.com/', icon: '🏀', desc: '英超/欧冠/综合赛事', tag: '会员' },
-      { name: '懂球帝直播', url: 'https://www.dongqiudi.com/live', icon: '⚽', desc: '足球赛事聚合直播', tag: '免费' },
-      { name: '直播吧', url: 'https://www.zhibo8.com/', icon: '🏆', desc: '全赛事直播聚合', tag: '免费' },
-      { name: '虎扑', url: 'https://www.hupu.com/', icon: '🔥', desc: '赛事社区+文字直播', tag: '免费' },
+      { name: '直播吧', url: 'https://www.zhibo8.com/', icon: '🏆', desc: '全赛事免费直播聚合' },
+      { name: '央视体育', url: 'https://tv.cctv.com/live/cctv5/', icon: '📺', desc: 'CCTV5 官方免费直播' },
+      { name: '懂球帝直播', url: 'https://www.dongqiudi.com/live', icon: '⚽', desc: '足球赛事免费直播' },
+      { name: '雨燕直播', url: 'https://www.yuyanzhibo.com/', icon: '🐦', desc: '足球免费高清直播' },
+      { name: '人人体育', url: 'https://www.zqzq.live/', icon: '👥', desc: '足球篮球免费直播' },
+      { name: '抓播', url: 'https://www.zhuabo.com/', icon: '🎯', desc: '全赛事免费直播' },
+      { name: '爱看球', url: 'https://www.ikanqiu.com/', icon: '❤️', desc: '足球赛事免费直播' },
+      { name: '360直播', url: 'https://www.360zhibo.com/', icon: '🔄', desc: '全赛事免费聚合' },
+      { name: '搜球吧', url: 'https://www.souqiuba.com/', icon: '🔍', desc: '足球免费直播' },
+      { name: 'JRS直播', url: 'https://www.jrskan.com/', icon: '🏈', desc: 'JRS免费赛事直播' },
     ];
     const basketballLinks = [
-      { name: '央视体育', url: 'https://tv.cctv.com/live/cctv5/', icon: '📺', desc: 'CCTV5 NBA/CBA直播', tag: '免费' },
-      { name: '央视频', url: 'https://www.yangshipin.cn/tv/home?pid=600001804', icon: '📱', desc: '央视频APP网页版', tag: '免费' },
-      { name: '咪咕视频', url: 'https://www.miguvideo.com/gateway/playurl/v3/play/playurl', icon: '🎬', desc: 'CBA/NBA直播', tag: '部分免费' },
-      { name: '腾讯体育', url: 'https://sports.qq.com/nba/', icon: '🏀', desc: 'NBA独家直播', tag: '会员' },
-      { name: '直播吧', url: 'https://www.zhibo8.com/', icon: '🏆', desc: 'NBA/CBA全赛事', tag: '免费' },
-      { name: '虎扑', url: 'https://voice.hupu.com/nba/', icon: '🔥', desc: 'NBA社区+文字直播', tag: '免费' },
-      { name: '新浪体育', url: 'https://sports.sina.com.cn/nba/', icon: '📰', desc: 'NBA图文直播', tag: '免费' },
-      { name: '腾讯视频', url: 'https://v.qq.com/channel/sport', icon: '🎥', desc: '体育赛事回放', tag: '会员' },
+      { name: '直播吧', url: 'https://www.zhibo8.com/', icon: '🏆', desc: 'NBA/CBA全赛事免费' },
+      { name: '央视体育', url: 'https://tv.cctv.com/live/cctv5/', icon: '📺', desc: 'CCTV5 NBA/CBA免费' },
+      { name: 'JRS直播', url: 'https://www.jrskan.com/', icon: '🏈', desc: 'NBA免费直播' },
+      { name: '人人体育', url: 'https://www.zqzq.live/', icon: '👥', desc: 'NBA/CBA免费直播' },
+      { name: '雨燕直播', url: 'https://www.yuyanzhibo.com/', icon: '🐦', desc: '篮球免费高清直播' },
+      { name: '抓播', url: 'https://www.zhuabo.com/', icon: '🎯', desc: 'NBA/CBA免费直播' },
+      { name: '360直播', url: 'https://www.360zhibo.com/', icon: '🔄', desc: '全赛事免费聚合' },
+      { name: '虎扑NBA', url: 'https://voice.hupu.com/nba/', icon: '🔥', desc: 'NBA文字直播+社区' },
+      { name: '新浪NBA', url: 'https://sports.sina.com.cn/nba/', icon: '📰', desc: 'NBA图文免费直播' },
+      { name: '搜球吧', url: 'https://www.souqiuba.com/', icon: '🔍', desc: '篮球免费直播' },
     ];
     const links = isFootball ? footballLinks : basketballLinks;
     return `
@@ -1003,12 +1008,12 @@ const App = {
               <div class="live-link-name">${l.name}</div>
               <div class="live-link-desc">${l.desc}</div>
             </div>
-            <span class="live-link-tag ${l.tag==='免费'?'free':l.tag==='部分免费'?'partial':'vip'}">${l.tag}</span>
+            <span class="live-link-tag free">🟢 免费</span>
           </a>
         `).join('')}
       </div>
-      <div style="margin-top:12px;padding:10px 14px;background:#f8f9fb;border-radius:8px;font-size:12px;color:var(--text-dim);line-height:1.6;">
-        💡 提示：免费平台推荐 <strong>央视体育/直播吧/懂球帝</strong>；付费平台 <strong>腾讯体育</strong>（NBA）、<strong>爱奇艺体育</strong>（欧冠）画质更佳。部分赛事可能需要会员或地区限制。
+      <div style="margin-top:12px;padding:10px 14px;background:rgba(46,204,113,0.06);border-radius:8px;font-size:12px;color:var(--text-dim);line-height:1.6;">
+        💡 以上平台全部免费，点击即看无需登录。<strong style="color:var(--accent3);">直播吧</strong> 赛事最全，<strong style="color:var(--accent3);">央视体育</strong> 官方高清，<strong style="color:var(--accent3);">雨燕直播</strong> 画质好。
       </div>
     `;
   },

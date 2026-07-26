@@ -487,6 +487,10 @@ tr:hover { background: #f5f7fa; }
 }
 
 /* ========== 直播入口 ========== */
+.live-top-card {
+  border: 1px solid rgba(46,204,113,0.3) !important;
+  background: linear-gradient(135deg, rgba(46,204,113,0.04) 0%, #fff 60%) !important;
+}
 .live-links-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
